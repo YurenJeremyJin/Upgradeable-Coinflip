@@ -59,8 +59,20 @@ contract CoinflipV2 is Initializable, OwnableUpgradeable, UUPSUpgradeable {
         if (seedlength < 10){
             revert SeedTooShort();
         }
-        //TODO: Set the seed variable as the NewSeed
-        seed = NewSeed;
+
+        for (uint i = 0; i < 5; i++) {
+            // Save the last character
+            bytes1 temp = newSeedBytes[seedlength - 1];
+            // Shift all characters to the right by one position
+            for (uint j = seedlength - 1; j > 0; j--) {
+                newSeedBytes[j] = newSeedBytes[j - 1];
+            }
+            // Place the last character saved into the first position
+            newSeedBytes[0] = temp;
+        }
+    
+        // Convert the bytes array back to a string and set it as the new seed
+        seed = string(newSeedBytes);
     }
 
 // -------------------- helper functions -------------------- //
